@@ -6,7 +6,7 @@ trap "kill 0" EXIT
 
 # Start Node.js server
 echo "✨ Starting Node.js server..."
-npx ts-node server.ts &
+bun server.ts &
 
 # Wait for server to start
 sleep 2
