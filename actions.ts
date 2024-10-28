@@ -121,7 +121,7 @@ class SolanaSwarmOperations {
         ]);
 
         // Confirm the transaction
-        await this.connection.confirmTransaction(signature, "confirmed");
+        await this.connection.confirmTransaction(signature, "finalized");
 
         return {
           success: true,
@@ -185,7 +185,7 @@ class SolanaSwarmOperations {
       console.log("signer", signer.publicKey.toString());
       console.log("identity", this.umi.identity.publicKey.toString());
 
-      const { signature: solTransferSignature } = await this.transferAsset(
+  await this.transferAsset(
         0.5 * LAMPORTS_PER_SOL,
         null,
         this.umi.identity.publicKey.toString()

@@ -82,7 +82,7 @@ class SwarmActionsBridge:
                 "assetId": asset_id,
                 "destinationAddress": destination_address
             }
-            result = self._execute_js_action("transferAsset", params)
+            result = requests.post(f"{self.node_server_url}/transfer-asset", json=params)
             return f"Asset transferred: {result}"
         except Exception as e:
             return f"Error transferring asset: {str(e)}"
@@ -91,7 +91,7 @@ class SwarmActionsBridge:
         """Get balance using custom implementation"""
         try:
             params = {"assetId": asset_id}
-            result = self._execute_js_action("getBalance", params)
+            result = requests.post(f"{self.node_server_url}/get-balance", json=params)
             return f"Balance: {result}"
         except Exception as e:
             return f"Error getting balance: {str(e)}"
@@ -104,8 +104,8 @@ class SwarmActionsBridge:
                 "symbol": symbol,
                 "baseUri": base_uri
             }
-            result = self._execute_js_action("deployNFT", params)
-            return f"NFT contract deployed: {result}"
+            result = requests.post(f"{self.node_server_url}/deploy-nft", json=params)
+            return f"NFT contract deployed: {result.json()}"
         except Exception as e:
             return f"Error deploying NFT contract: {str(e)}"
 
@@ -116,16 +116,16 @@ class SwarmActionsBridge:
                 "contractAddress": contract_address,
                 "mintTo": mint_to
             }
-            result = self._execute_js_action("mintNFT", params)
-            return f"NFT minted: {result}"
+            result = requests.post(f"{self.node_server_url}/mint-nft", json=params)
+            return f"NFT minted: {result.json()}"
         except Exception as e:
             return f"Error minting NFT: {str(e)}"
 
     def request_sol_from_faucet(self) -> str:
         """Request SOL from faucet"""
         try:
-            result = self._execute_js_action("requestSolFromFaucet", {})
-            return f"Faucet request completed: {result}"
+            result = requests.post(f"{self.node_server_url}/request-sol")
+            return f"Faucet request completed: {result.json()}"
         except Exception as e:
             return f"Error requesting from faucet: {str(e)}"
 
@@ -162,7 +162,7 @@ agent = Agent(
         swarm_bridge.get_balance,
         # swarm_bridge.request_sol_from_faucet,
         # swarm_bridge.generate_art,
-        # swarm_bridge.deploy_nft,
-        # swarm_bridge.mint_nft
+        swarm_bridge.deploy_nft,
+        swarm_bridge.mint_nft
     ]
 )
