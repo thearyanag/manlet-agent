@@ -5,6 +5,7 @@ import json
 from openai import OpenAI
 from swarm import Agent
 import os
+import requests
 # from .env file
 wallet_address = os.getenv("WALLET_ADDRESS")
 
@@ -67,8 +68,9 @@ class SwarmActionsBridge:
                 "symbol": symbol,
                 "initialSupply": initial_supply
             }
-            result = self._execute_js_action("createToken", params)
-            return f"Token created: {result}"
+            # make the apu call to node server with the params as body
+            response = requests.post(f"{self.node_server_url}/create-token", json=params)
+            return f"Token created: {response.json()}"
         except Exception as e:
             return f"Error creating token: {str(e)}"
 
@@ -156,11 +158,11 @@ agent = Agent(
           within your list of callable functions..""",
     functions=[
         swarm_bridge.create_token,
-        swarm_bridge.transfer_asset,
+        # swarm_bridge.transfer_asset,
         swarm_bridge.get_balance,
-        swarm_bridge.request_sol_from_faucet,
-        swarm_bridge.generate_art,
-        swarm_bridge.deploy_nft,
-        swarm_bridge.mint_nft
+        # swarm_bridge.request_sol_from_faucet,
+        # swarm_bridge.generate_art,
+        # swarm_bridge.deploy_nft,
+        # swarm_bridge.mint_nft
     ]
 )
